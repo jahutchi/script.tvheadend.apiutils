@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<settings>
+  <setting id="tvh_servername" type="text" label="32050" default="127.0.0.1" />
+  <setting id="tvh_port" type="number" option="int" label="32051" default="9981" />
+  <setting id="tvh_user" type="text" label="32052" default="" />
+  <setting id="tvh_pass" type="text" label="32053" option="hidden" enable="!eq(-1,)" default="" />
+  <setting id="debug" type="bool" label="32055" default="false"/>
+</settings>

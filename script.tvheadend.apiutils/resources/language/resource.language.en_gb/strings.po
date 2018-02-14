@@ -1,0 +1,196 @@
+# Kodi Media Center language file
+# Addon Name: Tvheadend API Utilities
+# Addon id: script.tvheadend.apiutils
+# Addon Provider: jahutchi
+msgid ""
+msgstr ""
+"Project-Id-Version: Tvheadend API Utilities\n"
+"POT-Creation-Date: 2018-30-01 10:00+0000\n"
+"PO-Revision-Date: 2018-30-01 10:00+0000\n"
+"Last-Translator: Kodi Translation Team\n"
+"Language-Team: ?\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Language: en\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+
+#Use strings 32000 thru 32999, which are reserved for scripts
+
+########################################
+#Strings used in Addon Settings,
+#addon.py & common.py
+########################################
+msgctxt "#32000"
+msgid "Tvheadend API Utilities"
+msgstr ""
+
+msgctxt "#32001"
+msgid "Invalid action"
+msgstr ""
+
+msgctxt "#32002"
+msgid "No action given"
+msgstr ""
+
+msgctxt "#32003"
+msgid "Please see here for further help: https://github.com/jahutchi/script.tvheadend.apiutils"
+msgstr ""
+
+msgctxt "#32004"
+msgid "Failed to delete watched recordings"
+msgstr ""
+
+msgctxt "#32005"
+msgid "Failed to toggle the series link"
+msgstr ""
+
+msgctxt "#32006"
+msgid "Please see the kodi logfile for more details"
+msgstr ""
+
+msgctxt "#32007"
+msgid "Failed to get kodi info label: "
+msgstr ""
+
+msgctxt "#32008"
+msgid "Failed to get kodi conditional visibility attribute: "
+msgstr ""
+
+msgctxt "#32009"
+msgid "Failed to determine current execution state"
+msgstr ""
+
+#Addon Settings
+
+msgctxt "#32050"
+msgid "Tvheadend Hostname/IP"
+msgstr ""
+
+msgctxt "#32051"
+msgid "Tvheadend HTTP Port"
+msgstr ""
+
+msgctxt "#32052"
+msgid "Tvheadend Username"
+msgstr ""
+
+msgctxt "#32053"
+msgid "Tvheadend Password"
+msgstr ""
+
+msgctxt "#32054"
+msgid "Tvheadend Auth Type"
+msgstr ""
+
+msgctxt "#32055"
+msgid "Enable Debug Logging"
+msgstr ""
+
+########################################
+#Strings used in deletewatched.py
+########################################
+
+msgctxt "#32100"
+msgid "You can only delete all watched recordings from within the TV Recordings window"
+msgstr ""
+
+msgctxt "#32101"
+msgid "Delete watched recordings"
+msgstr ""
+
+msgctxt "#32102"
+msgid "Could not find any watched recordings to delete"
+msgstr ""
+
+msgctxt "#32103"
+msgid "This will delete 1 watched recording"
+msgstr ""
+
+msgctxt "#32104"
+msgid "This will delete"
+msgstr ""
+
+msgctxt "#32105"
+msgid "watched recordings"
+msgstr ""
+
+msgctxt "#32106"
+msgid "Are you sure?"
+msgstr ""
+
+msgctxt "#32107"
+msgid "watched recording(s) were successfully deleted"
+msgstr ""
+
+########################################
+#Strings used in toggleserieslink.py
+########################################
+
+msgctxt "#32200"
+msgid "You can only toggle series links from within the TV Guide"
+msgstr ""
+
+msgctxt "#32201"
+msgid "Cannot add/delete timer because this show is currently recording"
+msgstr ""
+
+msgctxt "#32202"
+msgid "Unable to determine EPG event info via the Tvheadend API"
+msgstr ""
+
+msgctxt "#32203"
+msgid "Failed to delete timer rule via the Tvheadend API"
+msgstr ""
+
+msgctxt "#32204"
+msgid "Failed to create series link via the Tvheadend API"
+msgstr ""
+
+msgctxt "#32205"
+msgid "Failed to create timer rule via the Tvheadend API"
+msgstr ""
+
+msgctxt "#32206"
+msgid "Failed to rename timer rule via the Tvheadend API"
+msgstr ""
+
+msgctxt "#32207"
+msgid "Failed to determine series link info for the current timer via the Tvheadend API"
+msgstr ""
+
+msgctxt "#32308"
+msgid "Series link created by the Tvheadend API Utilities Kodi Addon."
+msgstr ""
+
+msgctxt "#32309"
+msgid "Timer rule created by the Tvheadend API Utilities Kodi Addon"
+msgstr ""
+
+########################################
+#Strings used in tvhapi.py
+########################################
+
+msgctxt "#32300"
+msgid "Unable to connect to Tvheadend"
+msgstr ""
+
+msgctxt "#32301"
+msgid "Invalid credentials, please check you've entered a valid username/password in the addon settings"
+msgstr ""
+
+msgctxt "#32302"
+msgid "Created by the Tvheadend API Utilities Kodi Addon"
+msgstr ""
+
+########################################
+#Strings used in kodiapi.py
+########################################
+
+msgctxt "#32400"
+msgid "Unable to call the Kodi JSON API"
+msgstr ""
+
+msgctxt "#32401"
+msgid "Please see the logfile for more details"
+msgstr ""

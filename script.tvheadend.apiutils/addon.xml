@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<addon id="script.tvheadend.apiutils" name="Tvheadend API Utilities" version="1.0.0" provider-name="jahutchi">
+  <requires>
+    <import addon="xbmc.python" version="2.25.0"/>
+    <import addon="script.module.requests" version="2.0.0"/>
+    <import addon="script.module.dateutil" version="2.0.0"/>
+  </requires>
+  <extension point="xbmc.python.script" library="addon.py">
+    <provides>executable</provides>
+  </extension>
+  <extension point="xbmc.addon.metadata">
+    <platform>all</platform>
+    <summary lang="en">Tvheadend API Utilities</summary>
+    <description lang="en">Exposes Tvheadend Backend functions that aren't accessible via pvr.hts</description>
+    <license>GNU General Public License, v2</license>
+    <language></language>
+    <source>https://github.com/jahutchi/script.tvheadend.apiutils</source>
+    <website>https://github.com/jahutchi/script.tvheadend.apiutils</website>
+    <assets>
+      <icon>icon.png</icon>
+    </assets>
+    <news>v1.0.0: Implemented initial version, which supports deleting all watched recordings, and scheduling proper series links</news>
+  </extension>
+</addon>
