@@ -28,6 +28,11 @@ tvhPort = addon.getSetting('tvh_port')
 tvhUsername = addon.getSetting('tvh_user')
 tvhPass = addon.getSetting('tvh_pass')
 
+seriesLinkManualRecType = addon.getSetting('serieslink_manual_rec_type')
+MANUAL_RECTYPE_KODI_PROMPT = '0'  # Display Kodi Timer Rule Prompt
+MANUAL_RECTYPE_TVH_AUTOREC = '1'  # Create basic AutoRec entry via the TVHeadend API
+MANUAL_RECTYPE_NO_ACTION   = '2'  # Display a Popup and Take No Action
+
 kodiLongdateFormat = xbmc.getRegion('datelong')
 kodiTimeFormatNoSeconds = xbmc.getRegion('time').replace(':%S','')
 kodiLongDateTimeFormatNoSeconds = kodiLongdateFormat + ' ' + kodiTimeFormatNoSeconds

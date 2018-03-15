@@ -63,8 +63,16 @@ msgstr ""
 
 #Addon Settings
 
+msgctxt "#32040"
+msgid "General"
+msgstr ""
+
+msgctxt "#32041"
+msgid "Series links"
+msgstr ""
+
 msgctxt "#32050"
-msgid "Tvheadend Hostname/IP"
+msgid "Tvheadend hostname/IP"
 msgstr ""
 
 msgctxt "#32051"
@@ -80,12 +88,25 @@ msgid "Tvheadend Password"
 msgstr ""
 
 msgctxt "#32054"
-msgid "Tvheadend Auth Type"
-msgstr ""
-
-msgctxt "#32055"
 msgid "Enable Debug Logging"
 msgstr ""
+
+msgctxt "#32060"
+msgid "When series link info is unavailable: "
+msgstr ""
+
+msgctxt "#32061"
+msgid "Display kodi timer rule prompt"
+msgstr ""
+
+msgctxt "#32062"
+msgid "Create basic AutoRec entry via the Tvheadend API"
+msgstr ""
+
+msgctxt "#32063"
+msgid "Display a popup and take no action"
+msgstr ""
+
 
 ########################################
 #Strings used in deletewatched.py
@@ -159,12 +180,16 @@ msgctxt "#32207"
 msgid "Failed to determine series link info for the current timer via the Tvheadend API"
 msgstr ""
 
-msgctxt "#32308"
+msgctxt "#32208"
 msgid "Series link created by the Tvheadend API Utilities Kodi Addon."
 msgstr ""
 
-msgctxt "#32309"
+msgctxt "#32209"
 msgid "Timer rule created by the Tvheadend API Utilities Kodi Addon"
+msgstr ""
+
+msgctxt "#32210"
+msgid "No series link information was available for this event"
 msgstr ""
 
 ########################################

@@ -1,3 +1,9 @@
-1.0.0 Initial Release of the TVHeadend API Utilities Addon.
+1.0.1
+- Removed obsolete dependency script.module.requests
+- Added a configuration option for what action to take when series link information is unavailable
+- Tidied up some of the strings
+
+1.0.0
+- Initial Release of the TVHeadend API Utilities Addon
 - Added function for removing all recordings in the Tvheadend backend which are marked as watched in the kodi front-end
 - Added function to create a proper series link from the currently selected item in the TV Guide

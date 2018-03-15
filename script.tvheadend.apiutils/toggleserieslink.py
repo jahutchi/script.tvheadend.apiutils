@@ -12,7 +12,9 @@ By James Hutchinson 2017
 def main():
 
   from common import log, logNotice, logError, epochFromUTCTimestamp, epochFromLocalTimestamp, epochNow, getString
-  from common import getKodiInfoLabel, getKodiCondVisibility, getCurrentWindowId, xbmcExecuteBuiltin
+  from common import getKodiInfoLabel, getKodiCondVisibility, getCurrentWindowId, xbmcExecuteBuiltin, seriesLinkManualRecType
+  from common import MANUAL_RECTYPE_KODI_PROMPT, MANUAL_RECTYPE_TVH_AUTOREC, MANUAL_RECTYPE_NO_ACTION
+
   import tvhapi
 
   def getCurrentEventEpochStartDateTime():
@@ -79,33 +81,46 @@ def main():
       log('Encountered an invalid UUID when attempting to rename the Tvheadend timer rule')
       raise RuntimeError(getString(32206))
 
-  def createTvhTimer(tvhEpgEvent):
-    tvhShowTitle = tvhEpgEvent["title"]
-    tvhEventId = tvhEpgEvent["eventId"]
-    tvhChannelUuid = tvhEpgEvent["channelUuid"]
-    if tvhEventHasSeriesLinkInfo(tvhEpgEvent):
-      logNotice('Creating series link via the Tvheadend API for: ' + tvhShowTitle)
-      try:
-        seriesLinkResponse = tvhapi.addTvhSeriesLink(tvhEventId)
-        tvhTimerUuid = seriesLinkResponse["uuid"][0]
-        tvhTimerComment = getString(32308) + ' URI: ' + tvhEpgEvent["serieslinkUri"]
-        logNotice('Series link successfully scheduled via the Tvheadend API')
-      except:
-        logError('Invalid series link response from Tvheadend')
-        raise RuntimeError(getString(32204))
-    else:
-      logNotice('Creating timer rule via the Tvheadend API for: ' + tvhShowTitle)
-      try:
-        timerRuleResponse = tvhapi.addTvhAutoRecRule(tvhShowTitle, tvhChannelUuid)
-        tvhTimerUuid = timerRuleResponse["uuid"]
-        tvhTimerComment = getString(32309)
-        logNotice('Timer tule successfully scheduled via the Tvheadend API')
-      except:
-        logError('Invalid timer rule creation response from Tvheadend')
-        raise RuntimeError(getString(32205))
-    renameTvhTimer(tvhTimerUuid, tvhShowTitle, tvhTimerComment)
+  def createTvhSeriesLink(tvhEpgEvent):
+    logNotice('Creating series link via the Tvheadend API for: ' + tvhEpgEvent["title"])
+    try:
+      seriesLinkResponse = tvhapi.addTvhSeriesLink(tvhEpgEvent["eventId"])
+      tvhTimerUuid = seriesLinkResponse["uuid"][0]
+      tvhTimerComment = getString(32208) + ' URI: ' + tvhEpgEvent["serieslinkUri"]
+      logNotice('Series link successfully scheduled via the Tvheadend API')
+      renameTvhTimer(tvhTimerUuid, tvhEpgEvent["title"], tvhTimerComment)
+    except:
+      logError('Invalid series link response from Tvheadend')
+      raise RuntimeError(getString(32204))
 
-  def deleteTvhTimer(tvhEpgEvent):
+  def showKodiTimerRulePrompt():
+    logNotice('Displaying the kodi built-in create timer rule window')
+    xbmcExecuteBuiltin('Action(ShowTimerRule)')
+
+  def createTvhAutoRec(tvhEpgEvent):
+    logNotice('Creating timer rule via the Tvheadend API for: ' + tvhEpgEvent["title"])
+    try:
+      timerRuleResponse = tvhapi.addTvhAutoRecRule(tvhEpgEvent["title"], tvhEpgEvent["channelUuid"])
+      tvhTimerUuid = timerRuleResponse["uuid"]
+      tvhTimerComment = getString(32209)
+      logNotice('Timer tule successfully scheduled via the Tvheadend API')
+      renameTvhTimer(tvhTimerUuid, tvhEpgEvent["title"], tvhTimerComment)
+    except:
+      logError('Invalid timer rule creation response from Tvheadend')
+      raise RuntimeError(getString(32205))
+
+  def createTimer(tvhEpgEvent):
+    if tvhEventHasSeriesLinkInfo(tvhEpgEvent):
+      createTvhSeriesLink(tvhEpgEvent)
+    else:
+      if seriesLinkManualRecType == MANUAL_RECTYPE_KODI_PROMPT:
+        showKodiTimerRulePrompt()
+      elif seriesLinkManualRecType == MANUAL_RECTYPE_TVH_AUTOREC:
+        createTvhAutoRec(tvhEpgEvent)
+      else:
+        raise RuntimeError(getString(32210))
+
+  def deleteTimer(tvhEpgEvent):
     logNotice('Removing timer rule via the Tvheadend API for: ' + tvhEpgEvent["title"])
     autorecUuid = tvhEpgEvent["autorec"]
     log('Autorec UUID: ' + autorecUuid)
@@ -134,16 +149,15 @@ def main():
                                    epochStartDateTime, \
                                    epochEndDateTime )
       if tvhEpgEvent["autorec"]: #If a timer rule has already been setup then remove it
-        deleteTvhTimer(tvhEpgEvent)
+        deleteTimer(tvhEpgEvent)
       else:
-        createTvhTimer(tvhEpgEvent)
+        createTimer(tvhEpgEvent)
     else:
-      logNotice('Event is in the past so prompting the user')
-      xbmcExecuteBuiltin('Action(ShowTimerRule)')
+      logNotice('Event is in the past')
+      showKodiTimerRulePrompt()
 
   #End of function declarations
 
   checkWindowId()
   checkEpgEventStatus()
   toggleSeriesLink()
-
