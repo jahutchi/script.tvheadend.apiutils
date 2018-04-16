@@ -1,3 +1,6 @@
+1.0.2
+- Correction for scheduling future events immediately prior to a DST change due to a kodi bug
+
 1.0.1
 - Removed obsolete dependency script.module.requests
 - Added a configuration option for what action to take when series link information is unavailable

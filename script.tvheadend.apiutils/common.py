@@ -91,10 +91,15 @@ def yesNoDialog(message, title=addonName):
   return xbmcgui.Dialog().yesno(title, message)
 
 def epochFromUTCTimestamp(strTimestamp):
-  return int((parse(strTimestamp+'Z')-parse('1970-01-01 00:00:00Z')).total_seconds())
+  return int((parse(strTimestamp+'Z') - parse('1970-01-01 00:00:00Z')).total_seconds())
 
 def epochFromLocalTimestamp(strTimestamp, strTimestampFormat=kodiLongDateTimeFormatNoSeconds):
-  return int(mktime(strptime(strTimestamp, strTimestampFormat)))
+  #return int(mktime(strptime(strTimestamp, strTimestampFormat)))
+  localDateTime = datetime.fromtimestamp(mktime(strptime(strTimestamp, strTimestampFormat)))
+  utcOffset = datetime.now() - datetime.utcnow()
+  utcDateTime = localDateTime - utcOffset
+  epoch = datetime.utcfromtimestamp(0)
+  return int((utcDateTime - epoch).total_seconds())
 
 def epochNow():
   return int(time())
