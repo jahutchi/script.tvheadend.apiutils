@@ -54,7 +54,7 @@ def httpPost(url, encodedParams, authType='digest'):
     raiseHTTPError('HTTP general exception: %s' % e)
   else:
     log('Tvheadend API Request Successful:')
-    log('  URL: http://' + url)
+    log('  URL: ' + url)
     log('  Parameters: ' + encodedParams)
     rawResponse = response.read()
     log('Tvheadend API response received:')
