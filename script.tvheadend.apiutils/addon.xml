@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<addon id="script.tvheadend.apiutils" name="Tvheadend API Utilities" version="1.0.2" provider-name="jahutchi">
+<addon id="script.tvheadend.apiutils" name="Tvheadend API Utilities" version="1.0.3" provider-name="jahutchi">
   <requires>
     <import addon="xbmc.python" version="2.25.0"/>
     <import addon="script.module.dateutil" version="2.0.0"/>
@@ -18,6 +18,6 @@
     <assets>
       <icon>icon.png</icon>
     </assets>
-    <news>v1.0.2: Correction for scheduling future events immediately prior to a DST change due to a kodi bug</news>
+    <news>v1.0.3: Added the ability to trigger an OTA EPG refresh</news>
   </extension>
 </addon>

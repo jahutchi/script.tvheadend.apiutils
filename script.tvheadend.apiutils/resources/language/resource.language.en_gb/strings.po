@@ -61,6 +61,10 @@ msgctxt "#32009"
 msgid "Failed to determine current execution state"
 msgstr ""
 
+msgctxt "#32010"
+msgid "Failed to refresh the EPG"
+msgstr ""
+
 #Addon Settings
 
 msgctxt "#32040"
@@ -218,4 +222,16 @@ msgstr ""
 
 msgctxt "#32401"
 msgid "Please see the logfile for more details"
+msgstr ""
+
+########################################
+#Strings used in otaepggrab.py
+########################################
+
+msgctxt "#32500"
+msgid "Failed to trigger an OTA EPG refresh"
+msgstr ""
+
+msgctxt "#32501"
+msgid "Refreshing EPG data"
 msgstr ""

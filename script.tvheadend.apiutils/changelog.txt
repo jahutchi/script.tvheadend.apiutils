@@ -1,3 +1,6 @@
+1.0.3
+- Added the ability to trigger an OTA EPG refresh
+
 1.0.2
 - Correction for scheduling future events immediately prior to a DST change due to a kodi bug
 

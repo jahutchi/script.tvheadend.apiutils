@@ -40,6 +40,14 @@ else:
         displayError(e.message)
       except:
         handleException(getString(32005) + '\n' + getString(32006))
+    elif argv[1] == 'refresh-epg':
+      try:
+        import otaepggrab
+        otaepggrab.main()
+      except RuntimeError as e:
+        displayError(e.message)
+      except:
+        handleException(getString(32010) + '\n' + getString(32006))
     else:
       displayError(getString(32001) + ": " + argv[1] + "\n" + getString(32003) )
   else:

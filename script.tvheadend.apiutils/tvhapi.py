@@ -110,3 +110,6 @@ def renameTvhIdNode(uuid, newName, newComment=getString(32302)):
 
 def deleteTvhIdNode(uuid):
   return tvhApiResponse('/api/idnode/delete', {'uuid':'[\"' + uuid + '\"]'})
+
+def triggerOtaEpgGrabber():
+  return tvhApiResponse('/api/epggrab/ota/trigger', {'trigger':'1'})
