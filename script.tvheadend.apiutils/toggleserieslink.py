@@ -43,7 +43,7 @@ def main():
         log('Unexpected parameters were returned for the Tvheadend Autorec lookup')
         raise RuntimeError(getString(32207))
     else:
-      log('The Tvheadend lookup found ' + len(tvhRecording) + ' upcoming recordings for the current event, but we expected 1')
+      log('The Tvheadend lookup found ' + str(len(tvhRecording)) + ' upcoming recordings for the current event, but we expected 1')
       raise RuntimeError(getString(32207))
 
   def getTvhEpgEvent(channelNumber, channelName, epochStartDateTime, epochEndDateTime):
@@ -57,7 +57,7 @@ def main():
         thisEvent.setdefault("autorec", 0)
       return thisEvent
     else:
-      log('The Tvheadend lookup found ' + len(tvhEpgEvent) + ' events, but we expected 1')
+      log('The Tvheadend lookup found ' + str(len(tvhEpgEvent)) + ' events, but we expected 1')
       raise RuntimeError(getString(32202))
 
   def tvhEventHasSeriesLinkInfo(tvhEpgEvent):
