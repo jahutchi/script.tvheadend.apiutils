@@ -137,3 +137,5 @@ def xbmcExecuteBuiltin(action):
 def logExecutionTime(start):
   logNotice('Script execution time: ' + str((datetime.now() - start).total_seconds()) + 's')
 
+def kodiMajorVersion():
+  return int(xbmc.getInfoLabel('System.BuildVersion')[:2])

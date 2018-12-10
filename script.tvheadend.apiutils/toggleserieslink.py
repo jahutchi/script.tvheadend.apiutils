@@ -11,7 +11,7 @@ By James Hutchinson 2017
 
 def main():
 
-  from common import log, logNotice, logError, epochFromUTCTimestamp, epochFromLocalTimestamp, epochNow, getString
+  from common import log, logNotice, logError, epochFromUTCTimestamp, epochFromLocalTimestamp, epochNow, getString, kodiMajorVersion
   from common import getKodiInfoLabel, getKodiCondVisibility, getCurrentWindowId, xbmcExecuteBuiltin, seriesLinkManualRecType
   from common import MANUAL_RECTYPE_KODI_PROMPT, MANUAL_RECTYPE_TVH_AUTOREC, MANUAL_RECTYPE_NO_ACTION
 
@@ -137,6 +137,12 @@ def main():
     if getKodiCondVisibility('ListItem.IsRecording'):
       raise RuntimeError(getString(32201))
 
+  def getKodiChannelNumber():
+    if kodiMajorVersion() < 18:
+      return getKodiInfoLabel('ListItem.ChannelNumber')
+    else:
+      return getKodiInfoLabel('ListItem.ChannelNumberLabel')
+
   def toggleSeriesLink():
     logNotice('Attempting to toggle series link for: ' + getKodiInfoLabel('ListItem.EPGEventTitle'))
 
@@ -144,7 +150,7 @@ def main():
     epochEndDateTime = getCurrentEventEpochEndDateTime()
 
     if epochEndDateTime > epochNow():
-      tvhEpgEvent = getTvhEpgEvent(getKodiInfoLabel('ListItem.ChannelNumber'), \
+      tvhEpgEvent = getTvhEpgEvent(getKodiChannelNumber(), \
                                    getKodiInfoLabel('ListItem.ChannelName'), \
                                    epochStartDateTime, \
                                    epochEndDateTime )
