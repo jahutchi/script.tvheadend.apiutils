@@ -1,3 +1,7 @@
+1.0.4
+- Added support for Kodi Leia
+- Fixed the error messages that should display when the wrong number of results are returned from the TVheadend API
+
 1.0.3
 - Added the ability to trigger an OTA EPG refresh
 
