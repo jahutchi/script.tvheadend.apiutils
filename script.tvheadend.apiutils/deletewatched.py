@@ -11,7 +11,7 @@ By James Hutchinson 2017
 
 def main():
 
-  from common import log, logNotice, logError, epochFromUTCTimestamp, getString, notificationPopup, getCurrentWindowId, okDialog, yesNoDialog
+  from common import log, logNotice, logError, epochFromUTCTimestamp, getString, notificationPopup, getCurrentWindowId, okDialog, yesNoDialog, kodiMajorVersion
   import kodiapi
   import tvhapi
 
@@ -24,9 +24,15 @@ def main():
     else:
       return getString(32104) + ' ' + str(numRecordings) + ' ' + getString(32105) + '\n' + getString(32106)
 
-  def getTvhRecordingUuid(channelName, epochStartDateTime, epochEndDateTime):
+  def getTvhRecordingUuid(channelName, epochEndDateTime):
     log('Using the Tvheadend API to lookup the Recording UUID')
-    tvhRecordings = tvhapi.getTvhFinishedRecordings(epochStartDateTime, epochEndDateTime)
+    if kodiMajorVersion() < 18:
+    #Prior to v18, the kodi api returned the time the show finished
+      tvhRecordings = tvhapi.getTvhFinishedRecordings(epochEndDateTime, 'stop')
+    else:
+    #From v18 onwards, the kodi api returns the actual time the recording finished (i.e. plus end padding)
+      tvhRecordings = tvhapi.getTvhFinishedRecordings(epochEndDateTime, 'stop_real')
+
     tvhRecording = [x for x in tvhRecordings["entries"] if x["channelname"] == channelName] #filter out correct channel
     if len(tvhRecording) == 1: #Make sure that one and only one recording was found
       return str(tvhRecording[0]["uuid"])
@@ -43,9 +49,8 @@ def main():
     logNotice('  Start Date/Time: ' + kodiWatchedRecording["starttime"])
     logNotice('  End Date/Time: ' + kodiWatchedRecording["endtime"])
 
-    epochStartDateTime = epochFromUTCTimestamp(kodiWatchedRecording["starttime"])
     epochEndDateTime = epochFromUTCTimestamp(kodiWatchedRecording["endtime"])
-    tvhRecordingUuid = getTvhRecordingUuid(kodiWatchedRecording["channel"], epochStartDateTime, epochEndDateTime)
+    tvhRecordingUuid = getTvhRecordingUuid(kodiWatchedRecording["channel"], epochEndDateTime)
     if tvhRecordingUuid:
       logNotice('  Tvheadend UUID: ' + tvhRecordingUuid)
       if len(tvhRecordingUuid) == 32:

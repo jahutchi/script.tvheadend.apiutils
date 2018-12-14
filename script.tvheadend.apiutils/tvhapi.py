@@ -74,14 +74,8 @@ def tvhApiResponse(urlPath, urlParams):
 def getTvhUpcomingRecording(uuid, fields):
   return tvhApiResponse('/api/idnode/load', {'uuid':uuid,'list':fields})
 
-def getTvhFinishedRecordings(epochStartDateTime=0, epochEndDateTime=0):
-  if epochStartDateTime:
-    filterParams = '{\"type\":\"numeric\",\"value\":' + str(epochStartDateTime) + ',\"field\":\"start\"}'
-  if epochEndDateTime:
-    param = '{\"type\":\"numeric\",\"value\":' + str(epochEndDateTime) + ',\"field\":\"stop\"}'
-    if filterParams: param = ',' + param
-    filterParams = filterParams + param
-  if filterParams: filterParams = '[' + filterParams + ']'
+def getTvhFinishedRecordings(epochEndDateTime=0, endDateTimeField='stop'):
+  filterParams = '[{\"type\":\"numeric\",\"value\":' + str(epochEndDateTime) + ',\"field\":\"' + endDateTimeField + '\"}]'
   return tvhApiResponse('/api/dvr/entry/grid_finished', {'filter':filterParams,'limit':'999999999'})
 
 def getTvhChannels():
