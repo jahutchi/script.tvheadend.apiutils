@@ -61,7 +61,7 @@ def main():
       raise RuntimeError(getString(32202))
 
   def tvhEventHasSeriesLinkInfo(tvhEpgEvent):
-    if "serieslinkId" in tvhEpgEvent and "serieslinkUri" in tvhEpgEvent:
+    if "serieslinkUri" in tvhEpgEvent:
       logNotice('Series Link information was found for this event')
       logNotice('Series Link URI: ' + str(tvhEpgEvent["serieslinkUri"]))
       return True
