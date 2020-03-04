@@ -1,3 +1,6 @@
+1.0.6
+- Improved the matching logic for the 'Delete Watched Recordings' functionality to work with EPG running state configurations
+
 1.0.5
 - Fixed the 'Toggle Series Link' functionality for Tvheadend v4.4 onwards
 

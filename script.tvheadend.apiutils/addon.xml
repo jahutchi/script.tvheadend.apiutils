@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<addon id="script.tvheadend.apiutils" name="Tvheadend API Utilities" version="1.0.5" provider-name="jahutchi">
+<addon id="script.tvheadend.apiutils" name="Tvheadend API Utilities" version="1.0.6" provider-name="jahutchi">
   <requires>
     <import addon="xbmc.python" version="2.25.0"/>
     <import addon="script.module.dateutil" version="2.0.0"/>
@@ -18,6 +18,6 @@
     <assets>
       <icon>icon.png</icon>
     </assets>
-    <news>v1.0.5: Fixed the 'Toggle Series Link' functionality for Tvheadend v4.4 onwards</news>
+    <news>v1.0.6: Improved the matching logic for the 'Delete Watched Recordings' functionality to work with EPG running state configurations</news>
   </extension>
 </addon>

@@ -48,18 +48,17 @@ def httpPost(url, encodedParams, authType='digest'):
     raiseHTTPError('URL error: %s: %s' % (e.code, e.reason))
   except httplib.HTTPException, e:
     raiseHTTPError('HTTP exception: %s' % e)
-  except socket.error, e:
-    raiseHTTPError('HTTP socket error: %s' % e)
   except Exception, e:
     raiseHTTPError('HTTP general exception: %s' % e)
   else:
     log('Tvheadend API Request Successful:')
     log('  URL: ' + url)
     log('  Parameters: ' + encodedParams)
-    rawResponse = response.read()
-    log('Tvheadend API response received:')
-    log(rawResponse)
-    response.close
+    log('Content Type: '+ response.headers['content-type'])
+    encoding = response.headers['content-type'].split('charset=')[-1]
+    log('Encoding: ' + encoding)
+    rawResponse = response.read().decode(encoding).encode('utf-8')
+    log('Response: ' + rawResponse)
     return rawResponse
 
 def tvhApiResponse(urlPath, urlParams):
@@ -67,16 +66,15 @@ def tvhApiResponse(urlPath, urlParams):
   encodedParams = urllib.urlencode(urlParams)
   response = httpPost(url, encodedParams)
   log('Converting JSON response')
-  jsonResponse = json.loads(response)
+  jsonResponse = json.loads(response, strict=False)
   log('JSON Conversion Complete')
   return jsonResponse
 
 def getTvhUpcomingRecording(uuid, fields):
   return tvhApiResponse('/api/idnode/load', {'uuid':uuid,'list':fields})
 
-def getTvhFinishedRecordings(epochEndDateTime=0, endDateTimeField='stop'):
-  filterParams = '[{\"type\":\"numeric\",\"value\":' + str(epochEndDateTime) + ',\"field\":\"' + endDateTimeField + '\"}]'
-  return tvhApiResponse('/api/dvr/entry/grid_finished', {'filter':filterParams,'limit':'999999999'})
+def getTvhFinishedRecordings():
+  return tvhApiResponse('/api/dvr/entry/grid_finished', {'limit':'999999999'})
 
 def getTvhChannels():
   return tvhApiResponse('/api/channel/list', {'all':'1'})

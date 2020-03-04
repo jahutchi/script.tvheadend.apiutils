@@ -24,36 +24,38 @@ def main():
     else:
       return getString(32104) + ' ' + str(numRecordings) + ' ' + getString(32105) + '\n' + getString(32106)
 
-  def getTvhRecordingUuid(channelName, epochEndDateTime):
-    log('Using the Tvheadend API to lookup the Recording UUID')
-    if kodiMajorVersion() < 18:
-    #Prior to v18, the kodi api returned the time the show finished
-      tvhRecordings = tvhapi.getTvhFinishedRecordings(epochEndDateTime, 'stop')
-    else:
-    #From v18 onwards, the kodi api returns the actual time the recording finished (i.e. plus end padding)
-      tvhRecordings = tvhapi.getTvhFinishedRecordings(epochEndDateTime, 'stop_real')
-
-    tvhRecording = [x for x in tvhRecordings["entries"] if x["channelname"] == channelName] #filter out correct channel
-    if len(tvhRecording) == 1: #Make sure that one and only one recording was found
-      return str(tvhRecording[0]["uuid"])
-    else:
-      log('The Tvheadend lookup found ' + str(len(tvhRecording)) + ' recordings, but we expected 1')
-      return 0
-
-  def deleteWatchedRecording(kodiWatchedRecording):
-    success = False
-
-    logNotice('Deleting Watched Recording:')
+  def getTvhRecordingUuid(kodiWatchedRecording, tvhRecordings):
+    kodiEpochStartTime = epochFromUTCTimestamp(kodiWatchedRecording["starttime"])
+    logNotice('Found Watched Recording:')
     logNotice('  Channel: ' + kodiWatchedRecording["channel"])
     logNotice('  Title: ' + kodiWatchedRecording["title"])
     logNotice('  Start Date/Time: ' + kodiWatchedRecording["starttime"])
+    logNotice('  Epoch Start Time: ' + str(kodiEpochStartTime))
     logNotice('  End Date/Time: ' + kodiWatchedRecording["endtime"])
+    logNotice('  Plot: ' + kodiWatchedRecording["plot"])
 
-    epochEndDateTime = epochFromUTCTimestamp(kodiWatchedRecording["endtime"])
-    tvhRecordingUuid = getTvhRecordingUuid(kodiWatchedRecording["channel"], epochEndDateTime)
+    tvhRecording = [x for x in tvhRecordings["entries"] \
+                        if     kodiWatchedRecording["channel"] == x["channelname"] \
+                       and     kodiWatchedRecording["title"]   == x["disp_title"] \
+                       and     kodiEpochStartTime >= x["start_real"] \
+                       and     kodiEpochStartTime < x["stop_real"] \
+                       and (   kodiWatchedRecording["plot"] == x["disp_description"] \
+                            or kodiWatchedRecording["plot"] == x["disp_subtitle"] ) ]
+    if len(tvhRecording) == 1: #Make sure that one and only one recording was found
+      tvhRecordingUuid = str(tvhRecording[0]["uuid"])
+      logNotice('  Tvheadend Recording UUID: ' + tvhRecordingUuid)
+      return tvhRecordingUuid
+    else:
+      logError('The Tvheadend lookup found ' + str(len(tvhRecording)) + ' recordings, but we expected 1')
+      return 0
+
+  def deleteWatchedRecording(kodiWatchedRecording, tvhRecordings):
+    success = False
+
+    tvhRecordingUuid = getTvhRecordingUuid(kodiWatchedRecording, tvhRecordings)
     if tvhRecordingUuid:
-      logNotice('  Tvheadend UUID: ' + tvhRecordingUuid)
       if len(tvhRecordingUuid) == 32:
+        logNotice('Deleting Watched Recording UUID: ' + tvhRecordingUuid)
         deletionResponse = tvhapi.deleteTvhFinishedRecording(tvhRecordingUuid)
         if not deletionResponse: #Successful deletion yields a blank {} response
           logNotice('Recording Successfully Deleted')
@@ -76,8 +78,7 @@ def main():
     logNotice('Attempting to delete all watched recordings')
     logNotice('Gathering list of recordings from Kodi')
     kodiRecordings = kodiapi.getRecordings()
-
-    log('Filtering out watched recordings')
+    logNotice('Filtering out watched Kodi recordings')
     kodiWatchedRecordings = filterWatchedKodiRecordings(kodiRecordings)
 
     if len(kodiWatchedRecordings) == 0:
@@ -89,10 +90,13 @@ def main():
       confirmMsg = deletionConfirmMsg(len(kodiWatchedRecordings))
       if yesNoDialog(confirmMsg, getString(32101)):
         logNotice('User answered yes to the confirmation prompt, so continuing')
+        logNotice('Gathering list of recordings from Tvheadend')
+        tvhRecordings = tvhapi.getTvhFinishedRecordings()
+
         numFilesDeleted = 0
         logNotice('----------------------------------------------------------------------')
         for kodiWatchedRecording in kodiWatchedRecordings:
-          if deleteWatchedRecording(kodiWatchedRecording): numFilesDeleted += 1
+          if deleteWatchedRecording(kodiWatchedRecording, tvhRecordings): numFilesDeleted += 1
 
         notificationPopup(str(numFilesDeleted) + ' ' + getString(32107))
         logNotice(str(numFilesDeleted) + ' watched recording(s) were deleted')
