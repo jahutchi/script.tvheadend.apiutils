@@ -54,10 +54,8 @@ def getKodiString(id):
 
 def log(msg, level=xbmc.LOGDEBUG):
   if addonDebug == 'true' and level == xbmc.LOGDEBUG:
-    level = xbmc.LOGNOTICE
+    level = xbmc.LOGINFO
   try:
-    if isinstance(msg, unicode):
-      msg = '%s' % (msg.encode('utf-8'))
     xbmc.log('[%s] %s' % (addonId, msg), level)
   except Exception as e:
     try:
@@ -65,8 +63,8 @@ def log(msg, level=xbmc.LOGDEBUG):
     except:
       pass # just give up
 
-def logNotice(msg):
-  log(msg, xbmc.LOGNOTICE)
+def logInfo(msg):
+  log(msg, xbmc.LOGINFO)
 
 def logError(errMsg):
   log(errMsg, xbmc.LOGWARNING)
@@ -134,7 +132,7 @@ def xbmcExecuteBuiltin(action):
   xbmc.executebuiltin(action)
 
 def logExecutionTime(start):
-  logNotice('Script execution time: ' + str((datetime.now() - start).total_seconds()) + 's')
+  logInfo('Script execution time: ' + str((datetime.now() - start).total_seconds()) + 's')
 
 def kodiMajorVersion():
   return int(xbmc.getInfoLabel('System.BuildVersion')[:2])

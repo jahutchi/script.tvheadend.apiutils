@@ -10,9 +10,10 @@ By James Hutchinson 2017
 """
 
 from common import log, logError, getString, tvhServername, tvhPort, tvhUsername, tvhPass
-import httplib
 import urllib
-import urllib2
+import urllib.error
+import urllib.parse
+import urllib.request
 import json
 
 def raiseHTTPError(errMsg):
@@ -21,22 +22,22 @@ def raiseHTTPError(errMsg):
   raise RuntimeError(onScreenErrMsg)
 
 def httpAuth(url, authType='digest'):
-  passwordMgr = urllib2.HTTPPasswordMgrWithDefaultRealm()
+  passwordMgr = urllib.request.HTTPPasswordMgrWithDefaultRealm()
   passwordMgr.add_password(None, url, tvhUsername, tvhPass)
 
   if authType == 'digest':
     log('Attempting Tvheadend Digest Authentication')
-    authHandler = urllib2.HTTPDigestAuthHandler(passwordMgr)
+    authHandler = urllib.request.HTTPDigestAuthHandler(passwordMgr)
   else:
     log('Attempting Tvheadend Basic Authentication')
-    authHandler = urllib2.HTTPBasicAuthHandler(passwordMgr)
-  return urllib2.build_opener(authHandler)
+    authHandler = urllib.request.HTTPBasicAuthHandler(passwordMgr)
+  return urllib.request.build_opener(authHandler)
 
 def httpPost(url, encodedParams, authType='digest'):
   try:
     request = httpAuth(url, authType)
     response = request.open(url, data=encodedParams)
-  except urllib2.HTTPError, e:
+  except urllib.error.HTTPError as e:
     if e.code == 401:
       if authType == 'digest': #attempt to fallback to basic http auth
         log('Digest Authentication Failed')
@@ -44,26 +45,24 @@ def httpPost(url, encodedParams, authType='digest'):
       else:
         logError(getString(32301))
     raiseHTTPError('HTTP error %s: %s' % (e.code, e.reason))
-  except urllib2.URLError, e:
+  except urllib.error.URLError as e:
     raiseHTTPError('URL error: %s: %s' % (e.code, e.reason))
-  except httplib.HTTPException, e:
-    raiseHTTPError('HTTP exception: %s' % e)
-  except Exception, e:
+  except Exception as e:
     raiseHTTPError('HTTP general exception: %s' % e)
   else:
     log('Tvheadend API Request Successful:')
     log('  URL: ' + url)
-    log('  Parameters: ' + encodedParams)
+    log('  Parameters: ' + str(encodedParams))
     log('Content Type: '+ response.headers['content-type'])
     encoding = response.headers['content-type'].split('charset=')[-1]
     log('Encoding: ' + encoding)
     rawResponse = response.read().decode(encoding).encode('utf-8')
-    log('Response: ' + rawResponse)
+    log('Response: ' + str(rawResponse))
     return rawResponse
 
 def tvhApiResponse(urlPath, urlParams):
   url = 'http://' + tvhServername + ':' + tvhPort + urlPath
-  encodedParams = urllib.urlencode(urlParams)
+  encodedParams = urllib.parse.urlencode(urlParams).encode('utf-8')
   response = httpPost(url, encodedParams)
   log('Converting JSON response')
   jsonResponse = json.loads(response, strict=False)

@@ -11,13 +11,13 @@ By James Hutchinson 2017
 
 from datetime import datetime
 start = datetime.now()
-from common import handleException, displayError, log, logNotice, getString, setAddonExecutingStatus, logExecutionTime
+from common import handleException, displayError, log, logInfo, getString, setAddonExecutingStatus, logExecutionTime
 
 log('Script Started')
 try:
   setAddonExecutingStatus(True)
 except RuntimeError as e:
-  logNotice(e.message)
+  logInfo(str(e))
 except:
   handleException(getString(32009))
 else:
@@ -28,7 +28,7 @@ else:
         import deletewatched
         deletewatched.main()
       except RuntimeError as e:
-        displayError(e.message)
+        displayError(str(e))
       except:
         handleException(getString(32004) + '\n' + getString(32006))
     elif argv[1] == 'toggle-series-link':
@@ -37,7 +37,7 @@ else:
         toggleserieslink.main()
         logExecutionTime(start)
       except RuntimeError as e:
-        displayError(e.message)
+        displayError(str(e))
       except:
         handleException(getString(32005) + '\n' + getString(32006))
     elif argv[1] == 'refresh-epg':
@@ -45,7 +45,7 @@ else:
         import otaepggrab
         otaepggrab.main()
       except RuntimeError as e:
-        displayError(e.message)
+        displayError(str(e))
       except:
         handleException(getString(32010) + '\n' + getString(32006))
     else:

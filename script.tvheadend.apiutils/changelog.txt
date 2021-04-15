@@ -1,3 +1,6 @@
+2.0.1
+- Initial Matrix release with Python 3.x compatability
+
 1.0.6
 - Improved the matching logic for the 'Delete Watched Recordings' functionality to work with EPG running state configurations
 

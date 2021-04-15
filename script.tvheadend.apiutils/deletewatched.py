@@ -11,7 +11,7 @@ By James Hutchinson 2017
 
 def main():
 
-  from common import log, logNotice, logError, epochFromUTCTimestamp, getString, notificationPopup, getCurrentWindowId, okDialog, yesNoDialog, kodiMajorVersion
+  from common import log, logInfo, logError, epochFromUTCTimestamp, getString, notificationPopup, getCurrentWindowId, okDialog, yesNoDialog, kodiMajorVersion
   import kodiapi
   import tvhapi
 
@@ -26,13 +26,13 @@ def main():
 
   def getTvhRecordingUuid(kodiWatchedRecording, tvhRecordings):
     kodiEpochStartTime = epochFromUTCTimestamp(kodiWatchedRecording["starttime"])
-    logNotice('Found Watched Recording:')
-    logNotice('  Channel: ' + kodiWatchedRecording["channel"])
-    logNotice('  Title: ' + kodiWatchedRecording["title"])
-    logNotice('  Start Date/Time: ' + kodiWatchedRecording["starttime"])
-    logNotice('  Epoch Start Time: ' + str(kodiEpochStartTime))
-    logNotice('  End Date/Time: ' + kodiWatchedRecording["endtime"])
-    logNotice('  Plot: ' + kodiWatchedRecording["plot"])
+    logInfo('Found Watched Recording:')
+    logInfo('  Channel: ' + kodiWatchedRecording["channel"])
+    logInfo('  Title: ' + kodiWatchedRecording["title"])
+    logInfo('  Start Date/Time: ' + kodiWatchedRecording["starttime"])
+    logInfo('  Epoch Start Time: ' + str(kodiEpochStartTime))
+    logInfo('  End Date/Time: ' + kodiWatchedRecording["endtime"])
+    logInfo('  Plot: ' + kodiWatchedRecording["plot"])
 
     tvhRecording = [x for x in tvhRecordings["entries"] \
                         if     kodiWatchedRecording["channel"] == x["channelname"] \
@@ -43,7 +43,7 @@ def main():
                             or kodiWatchedRecording["plot"] == x["disp_subtitle"] ) ]
     if len(tvhRecording) == 1: #Make sure that one and only one recording was found
       tvhRecordingUuid = str(tvhRecording[0]["uuid"])
-      logNotice('  Tvheadend Recording UUID: ' + tvhRecordingUuid)
+      logInfo('  Tvheadend Recording UUID: ' + tvhRecordingUuid)
       return tvhRecordingUuid
     else:
       logError('The Tvheadend lookup found ' + str(len(tvhRecording)) + ' recordings, but we expected 1')
@@ -55,10 +55,10 @@ def main():
     tvhRecordingUuid = getTvhRecordingUuid(kodiWatchedRecording, tvhRecordings)
     if tvhRecordingUuid:
       if len(tvhRecordingUuid) == 32:
-        logNotice('Deleting Watched Recording UUID: ' + tvhRecordingUuid)
+        logInfo('Deleting Watched Recording UUID: ' + tvhRecordingUuid)
         deletionResponse = tvhapi.deleteTvhFinishedRecording(tvhRecordingUuid)
         if not deletionResponse: #Successful deletion yields a blank {} response
-          logNotice('Recording Successfully Deleted')
+          logInfo('Recording Successfully Deleted')
           success = True
         else:
           logError('Deletion failed, invalid response from the Tvheadend API')
@@ -66,7 +66,7 @@ def main():
         logError('Skipping deletion since the Tvheadend lookup returned an invalid UUID')
     else:
       logError('Skipping deletion, since the Tvheadend lookup failed to identify a unique entry')
-    logNotice('--------------------------------------------------------------------------------')
+    logInfo('--------------------------------------------------------------------------------')
     return success
 
   def checkWindowId():
@@ -75,33 +75,33 @@ def main():
       raise RuntimeError(getString(32100))
 
   def deleteAllWatchedRecordings():
-    logNotice('Attempting to delete all watched recordings')
-    logNotice('Gathering list of recordings from Kodi')
+    logInfo('Attempting to delete all watched recordings')
+    logInfo('Gathering list of recordings from Kodi')
     kodiRecordings = kodiapi.getRecordings()
-    logNotice('Filtering out watched Kodi recordings')
+    logInfo('Filtering out watched Kodi recordings')
     kodiWatchedRecordings = filterWatchedKodiRecordings(kodiRecordings)
 
     if len(kodiWatchedRecordings) == 0:
-      logNotice('No watched recordings were found')
+      logInfo('No watched recordings were found')
       okDialog(getString(32102), getString(32101))
     else:
-      logNotice(str(len(kodiWatchedRecordings)) + ' watched recordings were found')
-      logNotice('Prompting for confirmation before proceeding')
+      logInfo(str(len(kodiWatchedRecordings)) + ' watched recordings were found')
+      logInfo('Prompting for confirmation before proceeding')
       confirmMsg = deletionConfirmMsg(len(kodiWatchedRecordings))
       if yesNoDialog(confirmMsg, getString(32101)):
-        logNotice('User answered yes to the confirmation prompt, so continuing')
-        logNotice('Gathering list of recordings from Tvheadend')
+        logInfo('User answered yes to the confirmation prompt, so continuing')
+        logInfo('Gathering list of recordings from Tvheadend')
         tvhRecordings = tvhapi.getTvhFinishedRecordings()
 
         numFilesDeleted = 0
-        logNotice('----------------------------------------------------------------------')
+        logInfo('----------------------------------------------------------------------')
         for kodiWatchedRecording in kodiWatchedRecordings:
           if deleteWatchedRecording(kodiWatchedRecording, tvhRecordings): numFilesDeleted += 1
 
         notificationPopup(str(numFilesDeleted) + ' ' + getString(32107))
-        logNotice(str(numFilesDeleted) + ' watched recording(s) were deleted')
+        logInfo(str(numFilesDeleted) + ' watched recording(s) were deleted')
       else:
-        logNotice('The user answered no to the confirmation prompt, so skipping deletion')
+        logInfo('The user answered no to the confirmation prompt, so skipping deletion')
 
   #End of function declarations
   checkWindowId()

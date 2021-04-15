@@ -11,7 +11,7 @@ By James Hutchinson 2017
 
 def main():
 
-  from common import log, logNotice, logError, epochFromUTCTimestamp, epochFromLocalTimestamp, epochNow, getString, kodiMajorVersion
+  from common import log, logInfo, logError, epochFromUTCTimestamp, epochFromLocalTimestamp, epochNow, getString, kodiMajorVersion
   from common import getKodiInfoLabel, getKodiCondVisibility, getCurrentWindowId, xbmcExecuteBuiltin, seriesLinkManualRecType
   from common import MANUAL_RECTYPE_KODI_PROMPT, MANUAL_RECTYPE_TVH_AUTOREC, MANUAL_RECTYPE_NO_ACTION
 
@@ -62,11 +62,11 @@ def main():
 
   def tvhEventHasSeriesLinkInfo(tvhEpgEvent):
     if "serieslinkUri" in tvhEpgEvent:
-      logNotice('Series Link information was found for this event')
-      logNotice('Series Link URI: ' + str(tvhEpgEvent["serieslinkUri"]))
+      logInfo('Series Link information was found for this event')
+      logInfo('Series Link URI: ' + str(tvhEpgEvent["serieslinkUri"]))
       return True
     else:
-      logNotice('Series Link information was not availble for this event')
+      logInfo('Series Link information was not availble for this event')
       return False
 
   def renameTvhTimer(tvhTimerUuid, tvhShowTitle, tvhTimerComment):
@@ -82,28 +82,28 @@ def main():
       raise RuntimeError(getString(32206))
 
   def createTvhSeriesLink(tvhEpgEvent):
-    logNotice('Creating series link via the Tvheadend API for: ' + tvhEpgEvent["title"])
+    logInfo('Creating series link via the Tvheadend API for: ' + tvhEpgEvent["title"])
     try:
       seriesLinkResponse = tvhapi.addTvhSeriesLink(tvhEpgEvent["eventId"])
       tvhTimerUuid = seriesLinkResponse["uuid"][0]
       tvhTimerComment = getString(32208) + ' URI: ' + tvhEpgEvent["serieslinkUri"]
-      logNotice('Series link successfully scheduled via the Tvheadend API')
+      logInfo('Series link successfully scheduled via the Tvheadend API')
       renameTvhTimer(tvhTimerUuid, tvhEpgEvent["title"], tvhTimerComment)
     except:
       logError('Invalid series link response from Tvheadend')
       raise RuntimeError(getString(32204))
 
   def showKodiTimerRulePrompt():
-    logNotice('Displaying the kodi built-in create timer rule window')
+    logInfo('Displaying the kodi built-in create timer rule window')
     xbmcExecuteBuiltin('Action(ShowTimerRule)')
 
   def createTvhAutoRec(tvhEpgEvent):
-    logNotice('Creating timer rule via the Tvheadend API for: ' + tvhEpgEvent["title"])
+    logInfo('Creating timer rule via the Tvheadend API for: ' + tvhEpgEvent["title"])
     try:
       timerRuleResponse = tvhapi.addTvhAutoRecRule(tvhEpgEvent["title"], tvhEpgEvent["channelUuid"])
       tvhTimerUuid = timerRuleResponse["uuid"]
       tvhTimerComment = getString(32209)
-      logNotice('Timer tule successfully scheduled via the Tvheadend API')
+      logInfo('Timer tule successfully scheduled via the Tvheadend API')
       renameTvhTimer(tvhTimerUuid, tvhEpgEvent["title"], tvhTimerComment)
     except:
       logError('Invalid timer rule creation response from Tvheadend')
@@ -121,7 +121,7 @@ def main():
         raise RuntimeError(getString(32210))
 
   def deleteTimer(tvhEpgEvent):
-    logNotice('Removing timer rule via the Tvheadend API for: ' + tvhEpgEvent["title"])
+    logInfo('Removing timer rule via the Tvheadend API for: ' + tvhEpgEvent["title"])
     autorecUuid = tvhEpgEvent["autorec"]
     log('Autorec UUID: ' + autorecUuid)
     if tvhapi.deleteTvhIdNode(autorecUuid): #A success yields a blank {} response
@@ -144,7 +144,7 @@ def main():
       return getKodiInfoLabel('ListItem.ChannelNumberLabel')
 
   def toggleSeriesLink():
-    logNotice('Attempting to toggle series link for: ' + getKodiInfoLabel('ListItem.EPGEventTitle'))
+    logInfo('Attempting to toggle series link for: ' + getKodiInfoLabel('ListItem.EPGEventTitle'))
 
     epochStartDateTime = getCurrentEventEpochStartDateTime()
     epochEndDateTime = getCurrentEventEpochEndDateTime()
@@ -159,7 +159,7 @@ def main():
       else:
         createTimer(tvhEpgEvent)
     else:
-      logNotice('Event is in the past')
+      logInfo('Event is in the past')
       showKodiTimerRulePrompt()
 
   #End of function declarations
