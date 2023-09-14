@@ -17,6 +17,9 @@ You can then map the following actions to your kodi remote buttons (keyboard.xml
 * `RunScript(script.tvheadend.apiutils,refresh-epg)`
    => This will trigger an OTA EPG refresh in the Tvheadend backend. Note: this currently only supports the OTA grabbers.
 
+## Known Issues
+
+The toggle-series-link action will not work correctly unless your Interface > Regional > unit format settings are all set to Regional
 
 ## Installation
 
